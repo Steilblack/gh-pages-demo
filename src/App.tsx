@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import api, { RESPONSE_DATA } from './api';
 import './App.css';
 
 function App() {
+  const [data, setData] = useState<RESPONSE_DATA>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get.data();
+        setData(response);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ textAlign: 'center', marginTop: '50px', fontSize: '24px' }}>
+      {data ? <p>{data.greeting}</p> : <p>Loading data...</p>}
     </div>
   );
 }
